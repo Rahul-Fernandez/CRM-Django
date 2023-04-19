@@ -40,7 +40,7 @@ class LandingPageView(generic.TemplateView):
 
     def dispatch(self, request, *args, **kwargs):
         if request.user.is_authenticated:
-            return redirect("dashboard")
+            return render(request,"statdash.html")
         return super().dispatch(request, *args, **kwargs)
 
 

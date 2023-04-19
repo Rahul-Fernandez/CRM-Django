@@ -11,12 +11,14 @@ from django.contrib.auth.views import (
 )
 from django.urls import path, include
 from leads.views import landing_page, LandingPageView, SignupView, DashboardView
-
+from django.views.generic import TemplateView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', LandingPageView.as_view(), name='landing-page'),
-    path('dashboard/', DashboardView.as_view(), name='dashboard'),
+    # path('dashboard/', DashboardView.as_view(), name='dashboard'),
+    path('dashboard/',TemplateView.as_view(template_name="statdash.html"), name = 'dashboard'),
+    
     path('leads/',  include('leads.urls', namespace="leads")),
     path('agents/',  include('agents.urls', namespace="agents")),
     path('signup/', SignupView.as_view(), name='signup'),

@@ -110,9 +110,9 @@ bar.height = 400
 var barConfig = new Chart(bar, {
     type: 'horizontalBar',
     data: {
-        labels: ['data-1', 'data-2', 'data-3', 'data-4', 'data-5', 'data-6', 'data-7'],
+        labels: ['agent-1', 'agent-2', 'agent-3', 'agent-4', 'agent-5', 'agent-6', 'agent-7'],
         datasets: [{
-            label: '# of data',
+            label: 'HIGHEST SALES',
             data: [30, 25, 20, 15, 11, 4, 2],
             backgroundColor: ['rgba(255, 99, 132, 1)', 'rgba(54, 162, 235, 1)', 'rgba(255, 206, 86, 1)', 'rgba(75, 192, 192, 1)', 'rgba(153, 102, 255, 1)', 'rgba(225, 50, 64, 1)', 'rgba(64, 159, 64, 1)'],
             borderWidth: 1
@@ -138,7 +138,7 @@ var myBubbleChart = new Chart(bubble, {
     data: {
         labels: ['data-1', 'data-2', 'data-3', 'data-4', 'data-5', 'data-6', 'data-7'],
         datasets: [{
-            label: '# of data',
+            label: 'LEAD',
             data: [{
                 x: 20,
                 y: 10,
@@ -181,7 +181,7 @@ var doughnut = document.getElementById('doughnut');
 var doughnutConfig = new Chart(doughnut, {
     type: 'doughnut',
     data: {
-        labels: ['data-1', 'data-2', 'data-3'],
+        labels: ['1st quarter', '2nd quarter', '3rd quarter'],
         datasets: [{
             label: '# of data',
             data: [11, 30, 20],
@@ -200,9 +200,9 @@ line.height = 200
 var lineConfig = new Chart(line, {
     type: 'line',
     data: {
-        labels: ['data-1', 'data-2', 'data-3', 'data-4', 'data-5', 'data-6'],
+        labels: ['2017', '2018', '2019', '2020', '2021', '2022'],
         datasets: [{
-            label: '# of data', // Name the series
+            label: 'YEARLY', // Name the series
             data: [10, 15, 20, 10, 25, 5, 10], // Specify the data values array
             fill: false,
             borderColor: '#2196f3', // Add custom color border (Line)
@@ -220,7 +220,7 @@ var pie = document.getElementById('pie');
 var pieConfig = new Chart(pie, {
     type: 'pie',
     data: {
-        labels: ['data-1', 'data-2'],
+        labels: ['OFFLINE', 'ONLINE'],
         datasets: [{
             label: '# of data',
             data: [40, 80],
@@ -238,9 +238,9 @@ var polar = document.getElementById('polar');
 var polarConfig = new Chart(polar, {
     type: 'polarArea',
     data: {
-        labels: ['data-1', 'data-2', 'data-3'],
+        labels: ['SHOES', 'SHIRTS', 'PANTS'],
         datasets: [{
-            label: '# of data',
+            label: 'this',
             data: [10, 20, 30],
             backgroundColor: ['rgba(0, 230, 118, 1)', 'rgba(255, 206, 86, 1)', 'rgba(255,99,132,1)'],
             borderWidth: 1
@@ -256,14 +256,14 @@ var mixed = document.getElementById('mixed');
 var mixedConfig = new Chart(mixed, {
     type: 'bar',
     data: {
-        labels: ['data-1', 'data-2', 'data-3', 'data-4', 'data-5', 'data-6', 'data-7'],
+        labels: ['MON', 'TUE', 'WED', 'THUR', 'FRI', 'SAT', 'SUN'],
         datasets: [{
-            label: '# of data',
+            label: 'ACTUAL SALES',
             data: [18, 12, 9, 11, 8, 4, 2],
             backgroundColor: ['rgba(255, 99, 132, 1)', 'rgba(54, 162, 235, 1)', 'rgba(255, 206, 86, 1)', 'rgba(75, 192, 192, 1)', 'rgba(153, 102, 255, 1)', 'rgba(225, 50, 64, 1)', 'rgba(64, 159, 64, 1)'],
             borderWidth: 1
         }, {
-            label: '# of data', // Name the series
+            label: 'PROJECTED SALES', // Name the series
             data: [20, 19, 18, 14, 12, 15, 10],
             type: 'line', // Specify the data values array
             fill: false,

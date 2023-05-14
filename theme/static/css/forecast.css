@@ -1,4 +1,10 @@
 /* @extend display-flex; */
+.line-chart-container{
+    height: 70%;
+    margin: 5% auto 5% auto;
+    position: relative;
+    width: 90%;
+}
 display-flex, .display-flex, .display-flex-center, .signup-content, .signin-content, .social-login, .socials {
     display: flex;
     display: -webkit-flex; }

@@ -33,6 +33,8 @@ urlpatterns = [
     path('logout/', LogoutView.as_view(), name='logout'),
     
     path('preprocessing/', preprocessing, name='preprocessing'),
+    path('predict', predict, name='predict'),
+    #path('predict',TemplateView.as_view(template_name="predict.html"), name = 'predict'),
     path('checker_page/', checker_page, name='checker_page'),
     path('chooseMethod/', chooseMethod, name='chooseMethod'),
     path('classification/', classification, name='classification'),

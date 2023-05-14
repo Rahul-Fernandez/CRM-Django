@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<head>
+	<title>Modern Button Style</title>
+	<style>
+		body {
+			background-color: #f2f2f2;
+		}
+		
+		.btn {
+			display: inline-block;
+			padding: 16px 32px;
+			border: none;
+			border-radius: 0px;
+			font-size: 18px;
+			font-weight: bold;
+			letter-spacing: 2px;
+			text-transform: uppercase;
+			color: #fff;
+			background: linear-gradient(to right, #0A44A0, #2B333B);
+			box-shadow: 0px 10px 20px rgba(0,0,0,0.3);
+			transition: all 0.3s ease-in-out;
+			cursor: pointer;
+		}
+		
+		.btn:hover {
+			transform: translateY(-5px);
+			box-shadow: 0px 15px 25px rgba(0,0,0,0.5);
+		}
+		
+		.center {
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+		}
+	</style>
+</head>
+<body>
+	<div class="center">
+		<button class="btn" onclick= "location.href='{% url 'preprocessing' %}' "  >Cluster</button>
+		<button class="btn" onclick= "location.href='{% url 'forecast' %}' " >Forecast</button>
+	</div>
+</body>
+
+{% endblock content %}

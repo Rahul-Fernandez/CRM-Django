@@ -29,6 +29,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'chartjs',
     'aitools',
+    'Meeting',
 
     # Third party apps
     'crispy_forms',
@@ -39,6 +40,7 @@ INSTALLED_APPS = [
     # Local apps
     'leads',
     'agents',
+    'Clustering',
 ]
 
 MIDDLEWARE = [

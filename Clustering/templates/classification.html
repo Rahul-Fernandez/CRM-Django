@@ -1,0 +1,254 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<head>
+  <link href="{% static 'css/cluster.css' %}" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">  
+</head>
+<main>
+    <div class="container">
+        <div class="row">
+            <div class="method col-md-3">
+                <p>Select Method Classification</p>
+            </div>
+            <div class="method col-md-9">
+              <form action="{% url 'chooseMethod' %}" method="POST">
+                <div class="btn-group">
+                  {% csrf_token %}
+                  <select onchange="this.form.submit()" name="method" class="form-select" id="inputMethod">
+                    <option>Choose...</option>
+                    <option {% if method == '1' %} selected {% endif %} value="1">K-Nearest Neighbors</option>
+                    <option {% if method == '2' %} selected {% endif %} value="2">Naive Bayes</option>
+                  </select>
+                </div>
+              </form>
+              <form action="{% url 'classification' %}" method="POST">
+              <button class="btn btn-dark starts" type="button" id="file" onclick="this.form.submit()">Start</button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="option col-md-4">
+                <p>Test Options</p>
+                <div class="box__option">
+                  {% csrf_token %}
+                  <div class="form-check">
+                    <input class="form-check-input radio" type="radio" value="1" name="validation" id="split" {% if mode == '1' %} checked {% endif %}>
+                    <label class="form-check-label" for="split">
+                      Percentage split data <span>%</span>
+                    </label>
+                    <div class="splitValue col-sm-3">
+                      <input type="text" name="splitValue" class="form-control" {% if splitValue %} value="{{ splitValue }}" {% endif %} >
+                    </div>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input radio" type="radio" value="2" name="validation" id="cross" {% if mode == '2' %} checked {% endif %}>
+                    <label class="form-check-label" for="cross">
+                      Cross-validation <span class="fold">folds</span>
+                    </label>
+                    <div class="crossValue col-sm-3">
+                      <input type="text" name="crossValue" class="form-control" {% if crossValue %} value="{{ crossValue }}" {% endif %}>
+                    </div>
+                  </div>
+                </div>
+            </div>
+            <div class="results col-md-8">
+                <p>Classification Output</p>
+                <div class="box__results">
+                  <div class="scrollClass" id="resultPdf">
+                    {% if naiveBayes or knn %}
+                      <p>=== Run Information ===</p>
+                      <p>Name dataset : {{ name }}</p>
+                      <p>Instance : {{ rows }} rows</p>
+                      <p>Method : {{ nameMethod }}</p>
+                      {% if mode == '1' %}
+                        <p>Test mode : Percentage split data</p>
+                      {% elif mode == '2' %}
+                        <p>Test mode : Cross validation</p>
+                      {% endif %}
+                      {% if method == '1' %}
+                        {% if k %}
+                          <p>Number of K : {{ k }} </p>
+                        {% endif %}
+                      {% endif %}
+                      <br>
+                      <p>=== Final Classification ===</p>
+                      <p>Attributes :</p>
+                      {% for attribute in attributes %}
+                        <li>{{attribute}}</li>
+                      {% endfor %}
+                      <p>Fulldata : {{ rows }} data</p>
+                      {% if method == '1' %}
+                        <p>Accuracy : {{ knn }} % </p>
+                      {% endif %}
+                      {% if method == '2' %}
+                        <p>Accuracy : {{ naiveBayes }} % </p>
+                      {% endif %}
+                      <p>Confusion Matrix : </p>
+                      {% if confusion %}
+                        <img style="margin-top: -10px;" src="data:image/png;base64, {{confusion|safe}}">
+                      {% endif %}
+                    {% endif %}
+                  </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="models col-md-4">
+                <p>Create Models</p>
+                <div class="box__models">
+                  {% if method == '2' %}
+                  <div class="output">
+                    <p>Output Data</p>
+                    <div class="outputValue col-md-11">
+                      <select class="form-select" aria-label="Default select example" name="output">
+                        <option>Select output data</option>
+                        {% if headers %}
+                          {% for header in headers %}
+                            <option value="{{ header }}" {% if header == output %} selected {% endif %}>{{ header }}</option>
+                          {% endfor %}
+                        {% endif %}
+                      </select>
+                    </div>
+                  </div>
+                  {% endif %}
+                  {% if method == '1' %}
+                  <div class="knn">
+                    <p>Number of K</p>
+                    <div class="knnValue col-md-11">
+                      {% csrf_token %}
+                      <input type="text" class="form-control" name="knn" {% if k %} value="{{k}}" {% endif %}>
+                    </div>
+                  </div>
+                  {% endif %}
+                </div>
+              </div>
+            </form>
+            <div class="col-md-8">
+                <button type="button" id="save" class="btn btn-dark save">Save The Results</button>
+            </div>
+        </div>
+    </div>
+</main>
+{% block scripts %}
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+<script src="https://cdnjs.com/libraries/Chart.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
+<script src="{% static 'js/script.js' %}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.4/jspdf.min.js"></script>
+
+<script>
+// chart bar
+$(document).ready(function(){
+  var label = JSON.parse("{{headers|escapejs}}");
+  var mins = JSON.parse("{{mins|escapejs}}");
+  var means = JSON.parse("{{means|escapejs}}");
+  var maxs = JSON.parse("{{maxs|escapejs}}");
+  console.log(label)
+  console.log(maxs)
+  console.log(means)
+  console.log(mins)
+  var ctx = document.getElementById("myChart").getContext('2d');
+  new Chart(ctx, {
+      type: "bar",
+      responsive: true,
+      maintainAspectRatio: false,
+      data: {
+          labels: label,
+          datasets: [
+              {
+              label: "Min",
+              data: mins,
+              backgroundColor: "rgba(255, 99, 132, 0.2)",
+              borderColor: "rgba(255, 99, 132, 1)",
+              borderWidth: 1
+          },
+          {
+              label: "Mean",
+              data: means,
+              backgroundColor: "rgba(255, 206, 86, 0.2)",
+              borderColor: "rgba(255, 206, 86, 1)",
+              borderWidth: 1
+          },
+          {
+              label: "Max",
+              data: maxs,
+              backgroundColor:"rgba(54, 162, 235, 0.2)",
+              borderColor: "rgba(54, 162, 235, 1)",
+              borderWidth: 1
+          }
+      ]
+      },
+      options: {
+          scales: {
+              xAxes: [{ stacked: true }],
+              yAxes: [{ stacked: true}]
+          }
+      }
+  });
+});
+
+// For a pie chart
+$(function(){
+var label = JSON.parse("{{label|escapejs}}");
+var data = JSON.parse("{{clusters|escapejs}}");
+const cts = document.getElementById('chart').getContext('2d');
+var coloR = [];
+     var dynamicColors = function() {
+        var randomColor = Math.floor(Math.random()*16777215).toString(16);
+        return "#"+randomColor;
+     };
+
+     for (var i in data) {
+        coloR.push(dynamicColors());
+     }
+var chart = new Chart(cts,{
+type:'pie',
+data: {
+      labels: label,
+      datasets : [
+      {
+          label:'# of votes',
+          data : data,
+          backgroundColor:coloR,
+          borderWidth:1
+      }
+      ]
+  },
+});
+});
+
+
+
+$(document).ready(function() {
+ $('#save').click(function() {
+ var currentPosition = document.getElementById("resultPdf").scrollTop;
+  var w = document.getElementById("resultPdf").offsetWidth;
+  var h = document.getElementById("resultPdf").offsetHeight;
+  console.log(w)
+  console.log(h)
+ document.getElementById("resultPdf").style.height="auto";
+ document.getElementById("resultPdf").style.background="white";
+
+  html2canvas(document.getElementById("resultPdf"), {
+
+    dpi: 300, // Set to 300 DPI
+    scale: 1000, // Adjusts your resolution
+    onrendered: function(canvas) {
+      var img = canvas.toDataURL("image/jpeg", 1);
+      var doc = new jsPDF('p', 'pt', 'a4');
+      doc.addImage(img, 'JPEG', 0, 0, w-400, h);
+      doc.addPage();
+      doc.save('results.pdf');
+    }
+  });
+ document.getElementById("resultPdf").style.height="365px";
+ document.getElementById("resultPdf").scrollTop = currentPosition;
+});
+
+});
+
+</script>
+{% endblock %}
+{% endblock %}
